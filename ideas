@@ -1,0 +1,33 @@
+#1
+When an item reach x score (set by user)
+only that item is selectable
+
+#2
+Support for multiple lists
+
+#3
+Temporary weights (if temp_w > w)
+
+
+
+Done
+-----------------
+Android App 
+  Swipe
+  R/W Permissions
+  Create JSON
+  R/W JSON from/to file
+
+
+Todo
+-----------------
+Android App
+  PageOneFragment buttons from JSONArray
+    JSON list with items in backend
+    Present as buttons in the frontend
+  When to save? 
+    pause/quit app
+  ratingBar minimum?
+    for temporary weights
+  interface for adding new item?
+    overlay or third swipe

@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Test1",
+        "weight": 2,
+        "score": 40
+    },
+    {
+        "name": "Test3",
+        "weight": 1,
+        "score": 10
+    },
+    {
+        "name": "Test2",
+        "weight": 1,
+        "score": 0
+    }
+]
