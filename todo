@@ -1,0 +1,128 @@
+#!/usr/bin/env python3.6
+
+import sys
+import os
+import json
+import operator
+from datetime import date
+
+today = date.today()
+CURRENT_DATE = "{}{}{}".format(
+    format(today.day, '02'), 
+    format(today.month, '02'),
+    str(today.year)[2:])
+
+file_name = "test.json"
+
+JSON_404_MSG = "File not found, creating new set of items"
+ERR_ARGLEN_MSG = "Not enough arguments"
+
+
+def day_step(items):
+	print("New Day")
+	items[0] = items[1]
+	items[1] = []
+	items[2] = CURRENT_DATE
+	return items
+
+# ========= File Handlers ==========
+def reader():
+  with open(file_name, 'r') as f:
+    return JSON2items(json.load(f))
+
+def writer(items):
+  with open(file_name, 'w') as f:
+    json.dump(items2JSON(items), f, indent=4)
+
+# ======= JSON Converters =========
+def items2JSON(items):
+  temp_json = []
+  for item in items:
+    temp_json.append(item)
+  return temp_json
+
+def JSON2items(json):
+  temp_list = []
+  for item in json:
+    temp_list.append(item)
+  return temp_list
+
+# ======= Methods ========
+def list_items(args, items):
+	print("list({})".format(args))
+
+	print("Today")
+	for item in items[0]:
+		print(item)
+	print("Tomorrow")
+	for item in items[1]:
+		print(item)
+	return items
+
+def add(args, items):
+	print("add({})".format(args))
+	if len(args) < 1:
+		exit("Nothing to add")
+
+	if len(args) > 1:
+		if args[1] == "tomorrow": 
+			items[1].append(str(args[0]).lower())
+		elif args[1] == "today":
+			items[0].append(str(args[0]).lower())
+		# todo: add else case for time?
+	else:
+		# today (default)
+		items[0].append(str(args[0]).lower())
+	return items
+
+def finish(args, items):
+	print("finish({})".format(args))
+	if len(args) < 1:
+		exit("Nothing to finish")
+	
+	for item in items[0]:
+		if item == args[0]:
+			items[0].remove(item)
+	return items
+
+def push(args, items):
+	print("push({})".format(args))
+	if len(args) < 1:
+		exit("Nothing to push")
+	# todo: track with boolean
+	for item in items[0]:
+		if item == args[0]:
+			items[1].append(item)
+			items[0].remove(item)
+	return items
+
+def main():
+	items = [[], [], CURRENT_DATE]
+  
+	# Parameters: args & items
+	commands = {
+		'list': list_items,
+		'add': add,
+		'finish': finish,
+		'push': push,
+	}
+	
+	if len(sys.argv) < 2:
+		exit(ERR_ARGLEN_MSG)
+
+	if not sys.argv[1] in commands.keys():
+		exit(ERR_NOKEY_MSG)
+		
+	try:
+		items = reader()
+	except:
+		print(JSON_404_MSG)
+  
+	if int(items[2]) < int(CURRENT_DATE):
+		items = day_step(items)
+
+	items = commands[sys.argv[1]](sys.argv[2:], items)  
+	writer(items)
+
+if __name__ == "__main__":
+  main()
